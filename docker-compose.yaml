@@ -1,0 +1,14 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: humanresources_db
+    environment:
+      - POSTGRES_DB=humanresources_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+    ports:
+      - 5436:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+volumes:
+    postgres_data:
