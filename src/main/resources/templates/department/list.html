@@ -2,22 +2,17 @@
 <html lang="vi"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorate="~{layout/base}">
-<head>
-    <title>Phòng ban</title>
-</head>
+<head><title>Phòng ban</title></head>
 <body>
 <section layout:fragment="content" class="page-section">
     <div class="page-header page-header--compact">
         <div>
-            <div class="eyebrow"><span class="eyebrow-mark" aria-hidden="true"></span> People / 01</div>
+            <div class="eyebrow">Tổ chức</div>
             <h1 class="page-title">Phòng ban</h1>
-            <p class="page-lead">Xây dựng cây tổ chức và các đơn vị vận hành trong doanh nghiệp.</p>
+            <p class="page-lead">Quản lý các đơn vị và cơ cấu tổ chức trong doanh nghiệp.</p>
         </div>
-        <a class="btn btn-primary btn-lg" th:href="@{/departments/new}">
-            <span class="btn-plus" aria-hidden="true">+</span> Thêm phòng ban
-        </a>
+        <a class="btn btn-primary" th:href="@{/departments/new}"><span class="btn-plus" aria-hidden="true">+</span> Thêm phòng ban</a>
     </div>
 
     <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show mb-4" role="alert">
@@ -28,28 +23,18 @@
     <div class="surface-card table-card">
         <div class="table-toolbar">
             <div>
-                <div class="toolbar-kicker">Organization / Departments</div>
+                <div class="toolbar-kicker">Organization</div>
                 <h2 class="toolbar-title">Cơ cấu phòng ban</h2>
-                <p class="toolbar-note">Dùng trạng thái để tạm ngừng một đơn vị mà không làm mất lịch sử.</p>
+                <p class="toolbar-note">Tạm ngừng sử dụng để giữ lại lịch sử dữ liệu.</p>
             </div>
             <span class="record-count" th:text="${#lists.size(departments) + ' phòng ban'}">0 phòng ban</span>
         </div>
 
         <div class="table-responsive">
             <table class="table table-hover align-middle">
-                <thead>
-                <tr>
-                    <th class="ps-4">Mã</th>
-                    <th>Tên phòng ban</th>
-                    <th>Trực thuộc</th>
-                    <th>Trạng thái</th>
-                    <th class="text-end pe-4">Thao tác</th>
-                </tr>
-                </thead>
+                <thead><tr><th class="ps-4">Mã</th><th>Tên phòng ban</th><th>Trực thuộc</th><th>Trạng thái</th><th class="text-end pe-4">Thao tác</th></tr></thead>
                 <tbody>
-                <tr th:if="${#lists.isEmpty(departments)}">
-                    <td colspan="5" class="text-center text-secondary py-5">Chưa có phòng ban nào.</td>
-                </tr>
+                <tr th:if="${#lists.isEmpty(departments)}"><td colspan="5" class="text-center text-secondary py-5">Chưa có phòng ban nào.</td></tr>
                 <tr th:each="department : ${departments}">
                     <td class="ps-4"><span class="code-chip" th:text="${department.code}">ENG</span></td>
                     <td>
@@ -61,9 +46,7 @@
                         <span class="status-badge status-badge--success" th:if="${department.status.name() == 'ACTIVE'}">Đang hoạt động</span>
                         <span class="status-badge status-badge--muted" th:unless="${department.status.name() == 'ACTIVE'}">Ngừng sử dụng</span>
                     </td>
-                    <td class="text-end pe-4">
-                        <a class="btn btn-sm btn-outline-secondary" th:href="@{/departments/{id}/edit(id=${department.id})}">Chỉnh sửa</a>
-                    </td>
+                    <td class="text-end pe-4"><a class="btn btn-sm btn-outline-secondary" th:href="@{/departments/{id}/edit(id=${department.id})}">Chỉnh sửa</a></td>
                 </tr>
                 </tbody>
             </table>

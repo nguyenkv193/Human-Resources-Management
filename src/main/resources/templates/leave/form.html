@@ -6,8 +6,56 @@
 <head><title>Gửi đơn nghỉ phép</title></head>
 <body>
 <section layout:fragment="content" class="page-section">
-    <div class="page-header page-header--compact"><div><div class="eyebrow"><span class="eyebrow-mark" aria-hidden="true"></span> Time / Leave request</div><h1 class="page-title">Gửi đơn nghỉ phép</h1><p class="page-lead">Chọn khoảng thời gian nghỉ; hệ thống tự tính số ngày làm việc từ thứ Hai đến thứ Sáu.</p></div><a class="btn btn-outline-secondary" th:href="@{/leave}">Quay lại</a></div>
-    <div class="surface-card form-card" style="max-width: 860px;"><div class="form-card-intro"><span class="form-card-number">01</span><div><h2>Chi tiết yêu cầu</h2><p>Đơn sẽ ở trạng thái chờ duyệt sau khi gửi.</p></div></div><div class="form-card-body"><form th:object="${leaveForm}" th:action="@{/leave}" method="post" novalidate><input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"><div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger mb-4"><div th:each="error : ${#fields.globalErrors()}" th:text="${error.defaultMessage}"></div></div><div class="form-grid"><div><label for="leaveTypeId" class="form-label">Loại nghỉ</label><select id="leaveTypeId" class="form-select" th:field="*{leaveTypeId}" th:classappend="${#fields.hasErrors('leaveTypeId')} ? 'is-invalid'"><option value="">Chọn loại nghỉ</option><option th:each="type : ${leaveTypes}" th:value="${type.id}" th:text="${type.name + ' · ' + type.defaultDays + ' ngày/năm'}">Annual Leave · 12 ngày/năm</option></select><div class="invalid-feedback" th:if="${#fields.hasErrors('leaveTypeId')}" th:errors="*{leaveTypeId}"></div></div><div><label class="form-label">Trạng thái</label><div class="static-field"><span class="status-badge status-badge--warning">Chờ duyệt</span><span>Manager/HR sẽ xử lý sau khi gửi</span></div></div><div><label for="startDate" class="form-label">Ngày bắt đầu</label><input id="startDate" type="date" class="form-control" th:field="*{startDate}" th:classappend="${#fields.hasErrors('startDate')} ? 'is-invalid'"><div class="invalid-feedback" th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}"></div></div><div><label for="endDate" class="form-label">Ngày kết thúc</label><input id="endDate" type="date" class="form-control" th:field="*{endDate}" th:classappend="${#fields.hasErrors('endDate')} ? 'is-invalid'"><div class="invalid-feedback" th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}"></div></div><div class="form-field--full"><label for="reason" class="form-label">Lý do <span class="text-secondary">(tùy chọn)</span></label><textarea id="reason" rows="4" class="form-control" th:field="*{reason}" placeholder="Thêm ghi chú cho người duyệt..."></textarea></div></div><div class="form-actions"><a class="btn btn-outline-secondary" th:href="@{/leave}">Hủy</a><button class="btn btn-primary" type="submit">Gửi đơn nghỉ</button></div></form></div></div>
+    <div class="page-header page-header--compact">
+        <div>
+            <div class="eyebrow">Nghỉ phép</div>
+            <h1 class="page-title">Gửi đơn nghỉ phép</h1>
+            <p class="page-lead">Hệ thống tự tính số ngày làm việc từ thứ Hai đến thứ Sáu.</p>
+        </div>
+        <a class="btn btn-outline-secondary" th:href="@{/leave}">Quay lại</a>
+    </div>
+
+    <div class="surface-card form-card form-card--narrow">
+        <div class="form-card-intro">
+            <span class="form-card-number">01</span>
+            <div><h2>Chi tiết yêu cầu</h2><p>Đơn sẽ ở trạng thái chờ duyệt sau khi gửi.</p></div>
+        </div>
+        <div class="form-card-body">
+            <form th:object="${leaveForm}" th:action="@{/leave}" method="post" novalidate>
+                <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger mb-4"><div th:each="error : ${#fields.globalErrors()}" th:text="${error.defaultMessage}"></div></div>
+                <div class="form-grid">
+                    <div>
+                        <label for="leaveTypeId" class="form-label">Loại nghỉ</label>
+                        <select id="leaveTypeId" class="form-select" th:field="*{leaveTypeId}" th:classappend="${#fields.hasErrors('leaveTypeId')} ? 'is-invalid'">
+                            <option value="">Chọn loại nghỉ</option>
+                            <option th:each="type : ${leaveTypes}" th:value="${type.id}" th:text="${type.name + ' · ' + type.defaultDays + ' ngày/năm'}">Annual Leave · 12 ngày/năm</option>
+                        </select>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('leaveTypeId')}" th:errors="*{leaveTypeId}"></div>
+                    </div>
+                    <div>
+                        <label class="form-label">Trạng thái</label>
+                        <div class="static-field"><span class="status-badge status-badge--warning">Chờ duyệt</span><span>Chờ xử lý sau khi gửi</span></div>
+                    </div>
+                    <div>
+                        <label for="startDate" class="form-label">Ngày bắt đầu</label>
+                        <input id="startDate" type="date" class="form-control" th:field="*{startDate}" th:classappend="${#fields.hasErrors('startDate')} ? 'is-invalid'">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}"></div>
+                    </div>
+                    <div>
+                        <label for="endDate" class="form-label">Ngày kết thúc</label>
+                        <input id="endDate" type="date" class="form-control" th:field="*{endDate}" th:classappend="${#fields.hasErrors('endDate')} ? 'is-invalid'">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}"></div>
+                    </div>
+                    <div class="form-field--full">
+                        <label for="reason" class="form-label">Lý do <span class="text-secondary">(tùy chọn)</span></label>
+                        <textarea id="reason" rows="4" class="form-control" th:field="*{reason}" placeholder="Thêm ghi chú cho người duyệt..."></textarea>
+                    </div>
+                </div>
+                <div class="form-actions"><a class="btn btn-outline-secondary" th:href="@{/leave}">Hủy</a><button class="btn btn-primary" type="submit">Gửi đơn nghỉ</button></div>
+            </form>
+        </div>
+    </div>
 </section>
 </body>
 </html>

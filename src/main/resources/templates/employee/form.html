@@ -6,30 +6,112 @@
 <head><title th:text="${isEdit ? 'Chỉnh sửa nhân viên' : 'Thêm nhân viên'}">Nhân viên</title></head>
 <body>
 <section layout:fragment="content" class="page-section">
-    <div class="page-header page-header--compact"><div><div class="eyebrow"><span class="eyebrow-mark" aria-hidden="true"></span> People / Profile</div><h1 class="page-title" th:text="${isEdit ? 'Chỉnh sửa nhân viên' : 'Thêm nhân viên'}">Thêm nhân viên</h1><p class="page-lead">Thông tin nền tảng được dùng cho chấm công, nghỉ phép và các module HR tiếp theo.</p></div><a class="btn btn-outline-secondary" th:href="@{/employees}">Quay lại</a></div>
+    <div class="page-header page-header--compact">
+        <div>
+            <div class="eyebrow">Nhân viên</div>
+            <h1 class="page-title" th:text="${isEdit ? 'Chỉnh sửa nhân viên' : 'Thêm nhân viên'}">Thêm nhân viên</h1>
+            <p class="page-lead">Thông tin nền tảng cho chấm công, nghỉ phép và các module HR.</p>
+        </div>
+        <a class="btn btn-outline-secondary" th:href="@{/employees}">Quay lại</a>
+    </div>
 
     <div class="surface-card form-card">
-        <div class="form-card-intro"><span class="form-card-number">01</span><div><h2>Hồ sơ cơ bản</h2><p>Chỉ nhập dữ liệu cần thiết; thông tin nhạy cảm sẽ được bổ sung ở các tab chuyên biệt.</p></div></div>
+        <div class="form-card-intro">
+            <span class="form-card-number">01</span>
+            <div>
+                <h2>Hồ sơ cơ bản</h2>
+                <p>Nhập những thông tin cần thiết cho hồ sơ nhân viên.</p>
+            </div>
+        </div>
         <div class="form-card-body">
             <form th:object="${employeeForm}" th:action="${isEdit ? '/employees/' + employeeId : '/employees'}" method="post" novalidate>
                 <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger mb-4"><div th:each="error : ${#fields.globalErrors()}" th:text="${error.defaultMessage}"></div></div>
-                <div class="form-grid">
-                    <div><label for="employeeCode" class="form-label">Mã nhân viên</label><input id="employeeCode" class="form-control" th:field="*{employeeCode}" th:classappend="${#fields.hasErrors('employeeCode')} ? 'is-invalid'" placeholder="VD: EMP001"><div class="invalid-feedback" th:if="${#fields.hasErrors('employeeCode')}" th:errors="*{employeeCode}"></div></div>
-                    <div><label for="fullName" class="form-label">Họ và tên</label><input id="fullName" class="form-control" th:field="*{fullName}" th:classappend="${#fields.hasErrors('fullName')} ? 'is-invalid'" placeholder="Nguyễn Văn A"><div class="invalid-feedback" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></div></div>
-                    <div><label for="email" class="form-label">Email công việc</label><input id="email" type="email" class="form-control" th:field="*{email}" th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'" placeholder="a@company.com"><div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div></div>
-                    <div><label for="phone" class="form-label">Số điện thoại <span class="text-secondary">(tùy chọn)</span></label><input id="phone" class="form-control" th:field="*{phone}" placeholder="090..."></div>
-                    <div><label for="dateOfBirth" class="form-label">Ngày sinh</label><input id="dateOfBirth" type="date" class="form-control" th:field="*{dateOfBirth}" th:classappend="${#fields.hasErrors('dateOfBirth')} ? 'is-invalid'"><div class="invalid-feedback" th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{dateOfBirth}"></div></div>
-                    <div><label for="gender" class="form-label">Giới tính</label><select id="gender" class="form-select" th:field="*{gender}"><option value="">Chưa cập nhật</option><option value="MALE">Nam</option><option value="FEMALE">Nữ</option><option value="OTHER">Khác</option></select></div>
-                    <div><label for="hireDate" class="form-label">Ngày vào làm</label><input id="hireDate" type="date" class="form-control" th:field="*{hireDate}" th:classappend="${#fields.hasErrors('hireDate')} ? 'is-invalid'"><div class="invalid-feedback" th:if="${#fields.hasErrors('hireDate')}" th:errors="*{hireDate}"></div></div>
-                    <div><label for="status" class="form-label">Trạng thái</label><select id="status" class="form-select" th:field="*{status}"><option th:each="item : ${employeeStatuses}" th:value="${item}" th:text="${item.name() == 'ACTIVE' ? 'Đang làm việc' : item.name() == 'ON_LEAVE' ? 'Đang nghỉ' : item.name() == 'TERMINATED' ? 'Đã nghỉ việc' : 'Không hoạt động'}">Đang làm việc</option></select></div>
-                    <div><label for="departmentId" class="form-label">Phòng ban</label><select id="departmentId" class="form-select" th:field="*{departmentId}"><option value="">Chưa gán</option><option th:each="department : ${departments}" th:value="${department.id}" th:text="${department.code + ' · ' + department.name}">ENG · Engineering</option></select></div>
-                    <div><label for="positionId" class="form-label">Vị trí</label><select id="positionId" class="form-select" th:field="*{positionId}"><option value="">Chưa gán</option><option th:each="position : ${positions}" th:value="${position.id}" th:text="${position.code + ' · ' + position.name}">BE · Backend Developer</option></select></div>
-                    <div><label for="managerId" class="form-label">Quản lý trực tiếp</label><select id="managerId" class="form-select" th:field="*{managerId}"><option value="">Chưa gán</option><option th:each="manager : ${managers}" th:value="${manager.id}" th:text="${manager.employeeCode + ' · ' + manager.fullName}">EMP001 · Manager</option></select></div>
-                    <div><label for="terminationDate" class="form-label">Ngày nghỉ việc <span class="text-secondary">(tùy chọn)</span></label><input id="terminationDate" type="date" class="form-control" th:field="*{terminationDate}"></div>
-                    <div class="form-field--full"><label for="address" class="form-label">Địa chỉ <span class="text-secondary">(tùy chọn)</span></label><textarea id="address" rows="3" class="form-control" th:field="*{address}" placeholder="Địa chỉ liên hệ..."></textarea></div>
+                <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger mb-4">
+                    <div th:each="error : ${#fields.globalErrors()}" th:text="${error.defaultMessage}"></div>
                 </div>
-                <div class="form-actions"><a class="btn btn-outline-secondary" th:href="@{/employees}">Hủy</a><button class="btn btn-primary" type="submit" th:text="${isEdit ? 'Lưu thay đổi' : 'Tạo nhân viên'}">Lưu</button></div>
+
+                <div class="form-grid">
+                    <div>
+                        <label for="employeeCode" class="form-label">Mã nhân viên</label>
+                        <input id="employeeCode" class="form-control" th:field="*{employeeCode}"
+                               th:classappend="${#fields.hasErrors('employeeCode')} ? 'is-invalid'" placeholder="VD: EMP001">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('employeeCode')}" th:errors="*{employeeCode}"></div>
+                    </div>
+                    <div>
+                        <label for="fullName" class="form-label">Họ và tên</label>
+                        <input id="fullName" class="form-control" th:field="*{fullName}"
+                               th:classappend="${#fields.hasErrors('fullName')} ? 'is-invalid'" placeholder="Nguyễn Văn A">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></div>
+                    </div>
+                    <div>
+                        <label for="email" class="form-label">Email công việc</label>
+                        <input id="email" type="email" class="form-control" th:field="*{email}"
+                               th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'" placeholder="a@company.com">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                    </div>
+                    <div>
+                        <label for="phone" class="form-label">Số điện thoại <span class="text-secondary">(tùy chọn)</span></label>
+                        <input id="phone" class="form-control" th:field="*{phone}" placeholder="090...">
+                    </div>
+                    <div>
+                        <label for="dateOfBirth" class="form-label">Ngày sinh</label>
+                        <input id="dateOfBirth" type="date" class="form-control" th:field="*{dateOfBirth}"
+                               th:classappend="${#fields.hasErrors('dateOfBirth')} ? 'is-invalid'">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{dateOfBirth}"></div>
+                    </div>
+                    <div>
+                        <label for="gender" class="form-label">Giới tính</label>
+                        <select id="gender" class="form-select" th:field="*{gender}">
+                            <option value="">Chưa cập nhật</option><option value="MALE">Nam</option><option value="FEMALE">Nữ</option><option value="OTHER">Khác</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="hireDate" class="form-label">Ngày vào làm</label>
+                        <input id="hireDate" type="date" class="form-control" th:field="*{hireDate}"
+                               th:classappend="${#fields.hasErrors('hireDate')} ? 'is-invalid'">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('hireDate')}" th:errors="*{hireDate}"></div>
+                    </div>
+                    <div>
+                        <label for="status" class="form-label">Trạng thái</label>
+                        <select id="status" class="form-select" th:field="*{status}">
+                            <option th:each="item : ${employeeStatuses}" th:value="${item}" th:text="${item.name() == 'ACTIVE' ? 'Đang làm việc' : item.name() == 'ON_LEAVE' ? 'Đang nghỉ' : item.name() == 'TERMINATED' ? 'Đã nghỉ việc' : 'Không hoạt động'}">Đang làm việc</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="departmentId" class="form-label">Phòng ban</label>
+                        <select id="departmentId" class="form-select" th:field="*{departmentId}">
+                            <option value="">Chưa gán</option>
+                            <option th:each="department : ${departments}" th:value="${department.id}" th:text="${department.code + ' · ' + department.name}">ENG · Engineering</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="positionId" class="form-label">Vị trí</label>
+                        <select id="positionId" class="form-select" th:field="*{positionId}">
+                            <option value="">Chưa gán</option>
+                            <option th:each="position : ${positions}" th:value="${position.id}" th:text="${position.code + ' · ' + position.name}">BE · Backend Developer</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="managerId" class="form-label">Quản lý trực tiếp</label>
+                        <select id="managerId" class="form-select" th:field="*{managerId}">
+                            <option value="">Chưa gán</option>
+                            <option th:each="manager : ${managers}" th:value="${manager.id}" th:text="${manager.employeeCode + ' · ' + manager.fullName}">EMP001 · Manager</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="terminationDate" class="form-label">Ngày nghỉ việc <span class="text-secondary">(tùy chọn)</span></label>
+                        <input id="terminationDate" type="date" class="form-control" th:field="*{terminationDate}">
+                    </div>
+                    <div class="form-field--full">
+                        <label for="address" class="form-label">Địa chỉ <span class="text-secondary">(tùy chọn)</span></label>
+                        <textarea id="address" rows="3" class="form-control" th:field="*{address}" placeholder="Địa chỉ liên hệ..."></textarea>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a class="btn btn-outline-secondary" th:href="@{/employees}">Hủy</a>
+                    <button class="btn btn-primary" type="submit" th:text="${isEdit ? 'Lưu thay đổi' : 'Tạo nhân viên'}">Lưu</button>
+                </div>
             </form>
         </div>
     </div>

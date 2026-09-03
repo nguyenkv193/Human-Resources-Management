@@ -11,94 +11,65 @@
 <section layout:fragment="content" class="page-section dashboard-page">
     <div class="page-header">
         <div>
-            <div class="eyebrow"><span class="eyebrow-mark" aria-hidden="true"></span> Trung tâm điều hành</div>
-            <h1 class="display-title">Tổng quan <span>nhân sự.</span></h1>
-            <p class="page-lead">Một góc nhìn gọn để theo dõi con người, thời gian và các việc cần xử lý.</p>
+            <div class="eyebrow">Tổng quan</div>
+            <h1 class="display-title">Xin chào, <span sec:authentication="name">bạn</span></h1>
+            <p class="page-lead">Theo dõi nhanh tình hình nhân sự và những việc cần xử lý.</p>
         </div>
         <div class="page-header-meta">
-            <div class="meta-label">Tài khoản đang đăng nhập</div>
-            <strong class="meta-user" sec:authentication="name">Tài khoản</strong>
-            <span class="meta-date text-capitalize" th:text="${summary.today}">Thứ năm, 03/09/2026</span>
+            <div class="meta-label">Hôm nay</div>
+            <strong class="meta-user text-capitalize" th:text="${summary.today}">Thứ năm, 03/09/2026</strong>
+            <span class="meta-date">Dữ liệu hệ thống</span>
         </div>
     </div>
 
     <div class="overview-band">
         <div class="overview-band-grid">
             <div>
-                <div class="eyebrow eyebrow--light"><span class="eyebrow-mark" aria-hidden="true"></span> System snapshot</div>
-                <h2 class="overview-title">Nhìn nhanh. <em>Quản lý gọn.</em></h2>
-                <p class="overview-copy">Các chỉ số nhân sự cốt lõi được cập nhật từ dữ liệu hiện tại của workspace.</p>
+                <div class="eyebrow">Workspace overview</div>
+                <h2 class="overview-title">Mọi thông tin quan trọng, ở một nơi.</h2>
+                <p class="overview-copy">Số liệu được lấy từ hồ sơ nhân viên, chấm công và quy trình nghỉ phép hiện tại.</p>
             </div>
             <div class="overview-stat">
-                <span class="overview-stat-label">Đang hoạt động</span>
+                <span class="overview-stat-label">Tài khoản đang hoạt động</span>
                 <strong th:text="${summary.activeUsers}">0</strong>
-                <small>tài khoản có thể đăng nhập</small>
+                <small th:text="${summary.totalUsers + ' tài khoản trong hệ thống'}">0 tài khoản trong hệ thống</small>
             </div>
         </div>
     </div>
 
-    <div class="metric-grid">
-        <article class="metric-card metric-card--coral">
-            <div class="metric-card-top">
-                <span class="metric-label">Tổng tài khoản</span>
-                <span class="metric-icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24"><path d="M16 20v-1.6a3.4 3.4 0 0 0-3.4-3.4H6.4A3.4 3.4 0 0 0 3 18.4V20"/><circle cx="9.5" cy="7.5" r="3.5"/><path d="M16 4.3a3.5 3.5 0 0 1 0 6.7M21 20v-1.6a3.4 3.4 0 0 0-2.5-3.28"/></svg>
-                </span>
-            </div>
-            <strong class="metric-value" th:text="${summary.totalUsers}">0</strong>
-            <span class="metric-note">Tài khoản trong hệ thống</span>
-        </article>
-
-        <article class="metric-card metric-card--teal">
-            <div class="metric-card-top">
-                <span class="metric-label">Đang hoạt động</span>
-                <span class="metric-icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24"><path d="M4 12h4l2-6 4 12 2-6h4"/></svg>
-                </span>
-            </div>
-            <strong class="metric-value" th:text="${summary.activeUsers}">0</strong>
-            <span class="metric-note">Có thể đăng nhập</span>
-        </article>
-
-        <article class="metric-card metric-card--slate">
-            <div class="metric-card-top">
-                <span class="metric-label">Đã vô hiệu hóa</span>
-                <span class="metric-icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3M9 15h6"/></svg>
-                </span>
-            </div>
-            <strong class="metric-value" th:text="${summary.disabledUsers}">0</strong>
-            <span class="metric-note">Không thể đăng nhập</span>
-        </article>
-
-        <article class="metric-card metric-card--gold">
-            <div class="metric-card-top">
-                <span class="metric-label">Quản trị viên</span>
-                <span class="metric-icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24"><path d="m12 3 2.2 4.7 5.1.8-3.7 3.7.9 5.2-4.5-2.4-4.5 2.4.9-5.2-3.7-3.7 5.1-.8L12 3Z"/></svg>
-                </span>
-            </div>
-            <strong class="metric-value" th:text="${summary.adminUsers}">0</strong>
-            <span class="metric-note">Có quyền quản trị User</span>
-        </article>
-    </div>
-
+    <div class="section-kicker">People snapshot</div>
     <div class="metric-grid metric-grid--people">
         <article class="metric-card metric-card--teal">
-            <div class="metric-card-top"><span class="metric-label">Tổng nhân viên</span><span class="metric-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M16 20v-1.6a3.4 3.4 0 0 0-3.4-3.4H6.4A3.4 3.4 0 0 0 3 18.4V20"/><circle cx="9.5" cy="7.5" r="3.5"/><path d="M16 4.3a3.5 3.5 0 0 1 0 6.7M21 20v-1.6a3.4 3.4 0 0 0-2.5-3.28"/></svg></span></div>
-            <strong class="metric-value" th:text="${summary.totalEmployees}">0</strong><span class="metric-note">Hồ sơ nhân sự trong hệ thống</span>
+            <div class="metric-card-top">
+                <span class="metric-label">Tổng nhân viên</span>
+                <span class="metric-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M16 20v-1.6a3.4 3.4 0 0 0-3.4-3.4H6.4A3.4 3.4 0 0 0 3 18.4V20"/><circle cx="9.5" cy="7.5" r="3.5"/><path d="M16 4.3a3.5 3.5 0 0 1 0 6.7M21 20v-1.6a3.4 3.4 0 0 0-2.5-3.28"/></svg></span>
+            </div>
+            <strong class="metric-value" th:text="${summary.totalEmployees}">0</strong>
+            <span class="metric-note">Hồ sơ nhân sự</span>
         </article>
         <article class="metric-card metric-card--coral">
-            <div class="metric-card-top"><span class="metric-label">Đang làm việc</span><span class="metric-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12h4l2-6 4 12 2-6h4"/></svg></span></div>
-            <strong class="metric-value" th:text="${summary.activeEmployees}">0</strong><span class="metric-note">Nhân viên active hôm nay</span>
+            <div class="metric-card-top">
+                <span class="metric-label">Đang làm việc</span>
+                <span class="metric-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12h4l2-6 4 12 2-6h4"/></svg></span>
+            </div>
+            <strong class="metric-value" th:text="${summary.activeEmployees}">0</strong>
+            <span class="metric-note">Nhân viên active</span>
         </article>
         <article class="metric-card metric-card--gold">
-            <div class="metric-card-top"><span class="metric-label">Đơn chờ duyệt</span><span class="metric-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/></svg></span></div>
-            <strong class="metric-value" th:text="${summary.pendingLeaveRequests}">0</strong><span class="metric-note">Yêu cầu nghỉ phép đang chờ</span>
+            <div class="metric-card-top">
+                <span class="metric-label">Đơn chờ duyệt</span>
+                <span class="metric-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/></svg></span>
+            </div>
+            <strong class="metric-value" th:text="${summary.pendingLeaveRequests}">0</strong>
+            <span class="metric-note">Yêu cầu nghỉ phép</span>
         </article>
         <article class="metric-card metric-card--slate">
-            <div class="metric-card-top"><span class="metric-label">Có mặt hôm nay</span><span class="metric-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg></span></div>
-            <strong class="metric-value" th:text="${summary.attendanceToday}">0</strong><span class="metric-note">Bản ghi chấm công hôm nay</span>
+            <div class="metric-card-top">
+                <span class="metric-label">Có mặt hôm nay</span>
+                <span class="metric-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg></span>
+            </div>
+            <strong class="metric-value" th:text="${summary.attendanceToday}">0</strong>
+            <span class="metric-note">Bản ghi chấm công</span>
         </article>
     </div>
 
@@ -106,12 +77,11 @@
         <div class="surface-card data-card">
             <div class="data-card-header">
                 <div>
-                    <div class="section-kicker">Activity / 01</div>
+                    <div class="section-kicker">Recent activity</div>
                     <h2 class="section-title">Tài khoản mới nhất</h2>
                     <p class="section-description">Các tài khoản được tạo gần đây.</p>
                 </div>
-                <a class="btn btn-sm btn-outline-primary" sec:authorize="hasRole('ADMIN')"
-                   th:href="@{/users}">Xem tất cả <span aria-hidden="true">↗</span></a>
+                <a class="btn btn-sm btn-outline-primary" sec:authorize="hasRole('ADMIN')" th:href="@{/users}">Xem tất cả</a>
             </div>
 
             <div class="table-responsive">
@@ -153,34 +123,24 @@
 
         <div class="dashboard-side-stack">
             <div class="surface-card quick-actions" sec:authorize="hasRole('ADMIN')">
-                <div class="section-kicker">Shortcuts / 02</div>
+                <div class="section-kicker">Shortcuts</div>
                 <h2 class="section-title">Thao tác nhanh</h2>
                 <p class="section-description">Các thao tác quản trị thường dùng.</p>
                 <div class="action-list">
-                    <a class="action-link action-link--primary" th:href="@{/users/new}">
-                        <span>Tạo tài khoản mới</span><span class="action-arrow" aria-hidden="true">↗</span>
-                    </a>
-                    <a class="action-link" th:href="@{/employees/new}">
-                        <span>Thêm nhân viên</span><span class="action-arrow" aria-hidden="true">↗</span>
-                    </a>
-                    <a class="action-link" th:href="@{/users}">
-                        <span>Mở danh sách User</span><span class="action-arrow" aria-hidden="true">→</span>
-                    </a>
+                    <a class="action-link action-link--primary" th:href="@{/employees/new}"><span>Thêm nhân viên</span><span class="action-arrow" aria-hidden="true">→</span></a>
+                    <a class="action-link" th:href="@{/users/new}"><span>Tạo tài khoản</span><span class="action-arrow" aria-hidden="true">→</span></a>
+                    <a class="action-link" th:href="@{/departments/new}"><span>Thêm phòng ban</span><span class="action-arrow" aria-hidden="true">→</span></a>
                 </div>
             </div>
 
             <div class="surface-card roles-card">
-                <div class="section-kicker">Access / 03</div>
-                <h2 class="section-title">Phân quyền</h2>
-                <p class="section-description">Tổng quan role đang được sử dụng.</p>
-                <div class="role-summary">
-                    <span>ADMIN</span>
-                    <span class="role-summary-count" th:text="${summary.adminUsers}">0</span>
-                </div>
-                <div class="role-summary">
-                    <span>USER</span>
-                    <span class="role-summary-count" th:text="${summary.standardUsers}">0</span>
-                </div>
+                <div class="section-kicker">Accounts</div>
+                <h2 class="section-title">Tài khoản hệ thống</h2>
+                <p class="section-description">Tổng quan trạng thái truy cập.</p>
+                <div class="role-summary"><span>Tổng tài khoản</span><span class="role-summary-count" th:text="${summary.totalUsers}">0</span></div>
+                <div class="role-summary"><span>Đang hoạt động</span><span class="role-summary-count" th:text="${summary.activeUsers}">0</span></div>
+                <div class="role-summary"><span>Đã vô hiệu hóa</span><span class="role-summary-count" th:text="${summary.disabledUsers}">0</span></div>
+                <div class="role-summary"><span>ADMIN</span><span class="role-summary-count" th:text="${summary.adminUsers}">0</span></div>
             </div>
         </div>
     </div>
