@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head>
+    <title th:text="${isEdit ? 'Chỉnh sửa vị trí' : 'Tạo vị trí'}">Vị trí</title>
+</head>
+<body>
+<section layout:fragment="content" class="page-section">
+    <div class="page-header page-header--compact">
+        <div>
+            <div class="eyebrow"><span class="eyebrow-mark" aria-hidden="true"></span> People / 03</div>
+            <h1 class="page-title" th:text="${isEdit ? 'Chỉnh sửa vị trí' : 'Tạo vị trí'}">Tạo vị trí</h1>
+            <p class="page-lead">Định nghĩa tên gọi chuẩn cho các vai trò trong tổ chức.</p>
+        </div>
+        <a class="btn btn-outline-secondary" th:href="@{/positions}">Quay lại</a>
+    </div>
+
+    <div class="surface-card form-card">
+        <div class="form-card-intro"><span class="form-card-number">01</span><div><h2>Thông tin vị trí</h2><p>Không xóa vị trí đã có nhân viên; hãy chuyển sang trạng thái ngừng sử dụng.</p></div></div>
+        <div class="form-card-body">
+            <form th:object="${positionForm}" th:action="${isEdit ? '/positions/' + positionId : '/positions'}" method="post" novalidate>
+                <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger mb-4"><div th:each="error : ${#fields.globalErrors()}" th:text="${error.defaultMessage}"></div></div>
+                <div class="form-grid">
+                    <div><label for="code" class="form-label">Mã vị trí</label><input id="code" class="form-control" th:field="*{code}" th:classappend="${#fields.hasErrors('code')} ? 'is-invalid'" placeholder="VD: BE"><div class="invalid-feedback" th:if="${#fields.hasErrors('code')}" th:errors="*{code}"></div></div>
+                    <div><label for="name" class="form-label">Tên vị trí</label><input id="name" class="form-control" th:field="*{name}" th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'" placeholder="VD: Backend Developer"><div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div></div>
+                    <div><label for="status" class="form-label">Trạng thái</label><select id="status" class="form-select" th:field="*{status}"><option th:each="item : ${positionStatuses}" th:value="${item}" th:text="${item.name() == 'ACTIVE' ? 'Đang hoạt động' : 'Ngừng sử dụng'}">Đang hoạt động</option></select></div>
+                    <div class="form-field--full"><label for="description" class="form-label">Mô tả <span class="text-secondary">(tùy chọn)</span></label><textarea id="description" rows="4" class="form-control" th:field="*{description}" placeholder="Phạm vi và trách nhiệm chính..."></textarea></div>
+                </div>
+                <div class="form-actions"><a class="btn btn-outline-secondary" th:href="@{/positions}">Hủy</a><button class="btn btn-primary" type="submit" th:text="${isEdit ? 'Lưu thay đổi' : 'Tạo vị trí'}">Lưu</button></div>
+            </form>
+        </div>
+    </div>
+</section>
+</body>
+</html>
