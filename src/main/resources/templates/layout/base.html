@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="vi"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -38,12 +39,18 @@
                             type="button"
                             data-bs-toggle="dropdown"
                             aria-expanded="false">
-                        Tài khoản
+                        <span sec:authentication="name">Tài khoản</span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="#">Hồ sơ</a></li>
+                        <li><a class="dropdown-item" th:href="@{/users}">Quản lý User</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#">Đăng xuất</a></li>
+                        <li>
+                            <form th:action="@{/logout}" method="post" class="m-0">
+                                <input type="hidden" th:if="${_csrf != null}"
+                                       th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                <button class="dropdown-item" type="submit">Đăng xuất</button>
+                            </form>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -73,8 +80,11 @@
                         </div>
 
                         <nav class="nav nav-pills flex-column gap-1 px-3">
-                            <a class="nav-link sidebar-link active" href="#" aria-current="page">
+                            <a class="nav-link sidebar-link" th:href="@{/}">
                                 Dashboard
+                            </a>
+                            <a class="nav-link sidebar-link" th:href="@{/users}" aria-current="page">
+                                Người dùng
                             </a>
                             <a class="nav-link sidebar-link" href="#">
                                 Nhân viên
