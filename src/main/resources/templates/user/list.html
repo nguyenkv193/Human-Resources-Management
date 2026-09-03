@@ -61,7 +61,7 @@
                         <td th:text="${user.employeeId != null ? user.employeeId : '-'}">-</td>
                         <td>
                             <span th:if="${user.roles == null or user.roles.isEmpty()}" class="text-secondary">-</span>
-                            <span th:each="role : ${user.roles}" class="badge text-bg-light border me-1"
+                            <span th:each="role : ${user.roles}" class="badge bg-body text-body border me-1"
                                   th:text="${role.name}">ADMIN</span>
                         </td>
                         <td>
