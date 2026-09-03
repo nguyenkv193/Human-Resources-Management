@@ -40,6 +40,7 @@ public class UserController {
     ) {
         model.addAttribute("users", userService.findAll(keyword));
         model.addAttribute("keyword", keyword);
+        model.addAttribute("activePage", "users");
         return "user/list";
     }
 
@@ -117,6 +118,7 @@ public class UserController {
     public String changePasswordForm(@PathVariable Long id, Model model) {
         model.addAttribute("user", userService.findById(id));
         model.addAttribute("passwordForm", new ChangePasswordRequest());
+        model.addAttribute("activePage", "users");
         return "user/change-password";
     }
 
@@ -130,6 +132,7 @@ public class UserController {
     ) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("user", userService.findById(id));
+            model.addAttribute("activePage", "users");
             return "user/change-password";
         }
 
@@ -140,6 +143,7 @@ public class UserController {
         } catch (InvalidCurrentPasswordException exception) {
             bindingResult.reject("password.error", exception.getMessage());
             model.addAttribute("user", userService.findById(id));
+            model.addAttribute("activePage", "users");
             return "user/change-password";
         }
     }
@@ -169,5 +173,6 @@ public class UserController {
         model.addAttribute("roles", userService.findAllRoles());
         model.addAttribute("isEdit", isEdit);
         model.addAttribute("userId", userId);
+        model.addAttribute("activePage", "users");
     }
 }

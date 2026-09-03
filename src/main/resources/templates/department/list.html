@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head><title>Phòng ban</title></head>
+<body>
+<section layout:fragment="content" class="page-section">
+    <div class="page-header page-header--compact">
+        <div>
+            <div class="eyebrow">Tổ chức</div>
+            <h1 class="page-title">Phòng ban</h1>
+            <p class="page-lead">Quản lý các đơn vị và cơ cấu tổ chức trong doanh nghiệp.</p>
+        </div>
+        <a class="btn btn-primary" th:href="@{/departments/new}"><span class="btn-plus" aria-hidden="true">+</span> Thêm phòng ban</a>
+    </div>
+
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+        <span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
+    </div>
+
+    <div class="surface-card table-card">
+        <div class="table-toolbar">
+            <div>
+                <div class="toolbar-kicker">Organization</div>
+                <h2 class="toolbar-title">Cơ cấu phòng ban</h2>
+                <p class="toolbar-note">Tạm ngừng sử dụng để giữ lại lịch sử dữ liệu.</p>
+            </div>
+            <span class="record-count" th:text="${#lists.size(departments) + ' phòng ban'}">0 phòng ban</span>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead><tr><th class="ps-4">Mã</th><th>Tên phòng ban</th><th>Trực thuộc</th><th>Trạng thái</th><th class="text-end pe-4">Thao tác</th></tr></thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(departments)}"><td colspan="5" class="text-center text-secondary py-5">Chưa có phòng ban nào.</td></tr>
+                <tr th:each="department : ${departments}">
+                    <td class="ps-4"><span class="code-chip" th:text="${department.code}">ENG</span></td>
+                    <td>
+                        <div class="person-name" th:text="${department.name}">Engineering</div>
+                        <div class="table-subtext" th:text="${department.description ?: 'Chưa có mô tả'}">Mô tả</div>
+                    </td>
+                    <td th:text="${department.parent != null ? department.parent.name : 'Cấp công ty'}">Cấp công ty</td>
+                    <td>
+                        <span class="status-badge status-badge--success" th:if="${department.status.name() == 'ACTIVE'}">Đang hoạt động</span>
+                        <span class="status-badge status-badge--muted" th:unless="${department.status.name() == 'ACTIVE'}">Ngừng sử dụng</span>
+                    </td>
+                    <td class="text-end pe-4"><a class="btn btn-sm btn-outline-secondary" th:href="@{/departments/{id}/edit(id=${department.id})}">Chỉnh sửa</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+</body>
+</html>

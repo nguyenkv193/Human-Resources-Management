@@ -2,126 +2,243 @@
 <html lang="vi"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      data-bs-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <script>
+        (() => {
+            const savedTheme = window.localStorage.getItem('hr-theme');
+            const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            const theme = savedTheme === 'dark' || savedTheme === 'light' ? savedTheme : systemTheme;
+            document.documentElement.setAttribute('data-bs-theme', theme);
+        })();
+    </script>
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" th:href="@{/css/base.css}">
 
-    <title layout:title-pattern="$CONTENT_TITLE | Human Resources">
-        Human Resources
-    </title>
+    <title layout:title-pattern="$CONTENT_TITLE | Human Resources">Human Resources</title>
 </head>
-<body>
-<div class="main-layout d-flex flex-column min-vh-100">
-    <header class="app-header">
-        <nav class="navbar bg-primary app-navbar" data-bs-theme="dark">
-            <div class="container-fluid px-3 px-lg-4">
-                <button class="btn btn-outline-light d-lg-none me-2"
+<body class="app-body">
+<div class="app-root">
+    <header class="app-header sticky-top">
+        <nav class="navbar app-navbar">
+            <div class="app-header-inner">
+                <button class="mobile-menu-button d-lg-none"
                         type="button"
                         data-bs-toggle="offcanvas"
                         data-bs-target="#appSidebar"
                         aria-controls="appSidebar"
                         aria-label="Mở menu">
-                    <span aria-hidden="true">☰</span>
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M4 6.5h16M4 12h16M4 17.5h16"/>
+                    </svg>
                 </button>
 
-                <a class="navbar-brand fw-semibold" th:href="@{/}">
-                    Human Resources
+                <a class="brand-lockup" th:href="@{/dashboard}">
+                    <img class="brand-mark" th:src="@{/img/hr-mark.svg}" alt="">
+                    <span class="brand-copy">
+                        <span class="brand-name">Human Resources</span>
+                        <span class="brand-subtitle d-none d-sm-block">People operations</span>
+                    </span>
                 </a>
 
-                <div class="dropdown ms-auto">
-                    <button class="btn btn-primary dropdown-toggle"
+                <div class="header-actions">
+                    <div class="header-presence d-none d-md-flex">
+                        <span class="presence-dot" aria-hidden="true"></span>
+                        <span>Đang hoạt động</span>
+                    </div>
+
+                    <button id="themeToggle"
+                            class="icon-button"
                             type="button"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                        <span sec:authentication="name">Tài khoản</span>
+                            aria-pressed="false"
+                            aria-label="Chuyển sang chế độ tối"
+                            title="Chuyển sang chế độ tối">
+                        <span id="themeToggleIcon" class="theme-toggle-icon" aria-hidden="true">☾</span>
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" th:href="@{/users}">Quản lý User</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li>
-                            <form th:action="@{/logout}" method="post" class="m-0">
-                                <input type="hidden" th:if="${_csrf != null}"
-                                       th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                                <button class="dropdown-item" type="submit">Đăng xuất</button>
-                            </form>
-                        </li>
-                    </ul>
+
+                    <div class="dropdown user-menu">
+                        <button class="user-trigger dropdown-toggle"
+                                type="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                            <span class="avatar avatar--top">U</span>
+                            <span class="user-trigger-copy d-none d-sm-flex">
+                                <span class="user-trigger-name" sec:authentication="name">Tài khoản</span>
+                                <span class="user-trigger-role">Tài khoản hiện tại</span>
+                            </span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end user-dropdown">
+                            <li sec:authorize="hasRole('ADMIN')">
+                                <a class="dropdown-item" th:href="@{/users}">Quản lý User</a>
+                            </li>
+                            <li sec:authorize="hasRole('ADMIN')"><hr class="dropdown-divider"></li>
+                            <li>
+                                <form th:action="@{/logout}" method="post" class="m-0">
+                                    <input type="hidden" th:if="${_csrf != null}"
+                                           th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                    <button class="dropdown-item" type="submit">Đăng xuất</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </nav>
     </header>
 
-    <div class="container-fluid flex-grow-1">
-        <div class="row">
-            <div class="col-lg-2 p-0">
-                <aside id="appSidebar"
-                       class="app-sidebar offcanvas-lg offcanvas-start bg-white border-end"
-                       tabindex="-1"
-                       aria-labelledby="appSidebarLabel">
-                    <div class="offcanvas-header border-bottom d-lg-none">
-                        <h5 class="offcanvas-title" id="appSidebarLabel">Menu</h5>
-                        <button type="button"
-                                class="btn-close"
-                                data-bs-dismiss="offcanvas"
-                                aria-label="Đóng menu"></button>
-                    </div>
-
-                    <div class="offcanvas-body d-flex flex-column p-0">
-                        <div class="px-3 pt-4 pb-2">
-                            <small class="text-uppercase text-secondary fw-semibold">
-                                Điều hướng
-                            </small>
-                        </div>
-
-                        <nav class="nav nav-pills flex-column gap-1 px-3">
-                            <a class="nav-link sidebar-link" th:href="@{/}">
-                                Dashboard
-                            </a>
-                            <a class="nav-link sidebar-link" th:href="@{/users}" aria-current="page">
-                                Người dùng
-                            </a>
-                            <a class="nav-link sidebar-link" href="#">
-                                Nhân viên
-                            </a>
-                            <a class="nav-link sidebar-link" href="#">
-                                Phòng ban
-                            </a>
-                            <a class="nav-link sidebar-link" href="#">
-                                Chấm công
-                            </a>
-                            <a class="nav-link sidebar-link" href="#">
-                                Nghỉ phép
-                            </a>
-                        </nav>
-
-                        <div class="mt-auto border-top p-3 text-secondary small">
-                            Human Resources System
-                        </div>
-                    </div>
-                </aside>
+    <div class="app-shell">
+        <aside id="appSidebar"
+               class="app-sidebar offcanvas-lg offcanvas-start"
+               tabindex="-1"
+               aria-labelledby="appSidebarLabel">
+            <div class="offcanvas-header sidebar-mobile-header d-lg-none">
+                <div class="sidebar-mobile-title" id="appSidebarLabel">Điều hướng</div>
+                <button type="button"
+                        class="sidebar-close-button"
+                        data-bs-dismiss="offcanvas"
+                        aria-label="Đóng menu">×</button>
             </div>
 
-            <main class="main-content col-lg-10 p-3 p-lg-4" layout:fragment="content">
-                Nội dung trang sẽ hiển thị ở đây.
-            </main>
+            <div class="offcanvas-body sidebar-body">
+                <div class="sidebar-workspace">
+                    <div class="sidebar-kicker"><span class="presence-dot" aria-hidden="true"></span> Workspace</div>
+                    <div class="workspace-lockup">
+                        <img class="sidebar-mark" th:src="@{/img/hr-mark.svg}" alt="">
+                        <div>
+                            <div class="workspace-name">Human Resources</div>
+                            <div class="workspace-caption">Quản trị nội bộ</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-nav-heading">Tổng quan</div>
+                <nav class="sidebar-nav">
+                    <a class="sidebar-link"
+                       th:classappend="${activePage == 'dashboard'} ? ' active' : ''"
+                       th:href="@{/dashboard}">
+                        <span class="sidebar-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg>
+                        </span>
+                        <span class="sidebar-link-label">Tổng quan</span>
+                    </a>
+                </nav>
+
+                <div class="sidebar-nav-heading">Quản trị</div>
+                <nav class="sidebar-nav">
+                    <a class="sidebar-link"
+                       sec:authorize="hasRole('ADMIN')"
+                       th:classappend="${activePage == 'users'} ? ' active' : ''"
+                       th:href="@{/users}">
+                        <span class="sidebar-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M16 20v-1.6a3.4 3.4 0 0 0-3.4-3.4H6.4A3.4 3.4 0 0 0 3 18.4V20"/><circle cx="9.5" cy="7.5" r="3.5"/><path d="M16 4.3a3.5 3.5 0 0 1 0 6.7M21 20v-1.6a3.4 3.4 0 0 0-2.5-3.28"/></svg>
+                        </span>
+                        <span class="sidebar-link-label">Người dùng</span>
+                    </a>
+                    <a class="sidebar-link"
+                       sec:authorize="hasRole('ADMIN')"
+                       th:classappend="${activePage == 'employees'} ? ' active' : ''"
+                       th:href="@{/employees}">
+                        <span class="sidebar-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="15" rx="2"/><path d="M8 5V3h8v2M8 11h8M8 15h5"/></svg>
+                        </span>
+                        <span class="sidebar-link-label">Nhân viên</span>
+                    </a>
+                    <a class="sidebar-link"
+                       sec:authorize="hasRole('ADMIN')"
+                       th:classappend="${activePage == 'departments'} ? ' active' : ''"
+                       th:href="@{/departments}">
+                        <span class="sidebar-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg>
+                        </span>
+                        <span class="sidebar-link-label">Phòng ban</span>
+                    </a>
+                    <a class="sidebar-link"
+                       sec:authorize="hasRole('ADMIN')"
+                       th:classappend="${activePage == 'positions'} ? ' active' : ''"
+                       th:href="@{/positions}">
+                        <span class="sidebar-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M4 7.5h16M7 4v7M17 4v7M5 13h14v6H5z"/></svg>
+                        </span>
+                        <span class="sidebar-link-label">Vị trí</span>
+                    </a>
+                </nav>
+
+                <div class="sidebar-nav-heading">Thời gian</div>
+                <nav class="sidebar-nav">
+                    <a class="sidebar-link"
+                       th:classappend="${activePage == 'attendance'} ? ' active' : ''"
+                       th:href="@{/attendance}">
+                        <span class="sidebar-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18M7 14h3M7 17h3"/></svg>
+                        </span>
+                        <span class="sidebar-link-label">Chấm công</span>
+                    </a>
+                    <a class="sidebar-link"
+                       th:classappend="${activePage == 'leave'} ? ' active' : ''"
+                       th:href="@{/leave}">
+                        <span class="sidebar-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M12 3.5 14.3 9l5.7.4-4.4 3.7 1.4 5.5L12 15.7l-5 2.9 1.4-5.5L4 9.4 9.7 9 12 3.5Z"/></svg>
+                        </span>
+                        <span class="sidebar-link-label">Nghỉ phép</span>
+                    </a>
+                </nav>
+
+                <div class="sidebar-spacer"></div>
+                <div class="sidebar-status">
+                    <div class="status-orb"><span class="presence-dot" aria-hidden="true"></span></div>
+                    <div>
+                        <div class="status-title">Hệ thống hoạt động</div>
+                        <div class="status-caption">Dữ liệu được bảo vệ</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <div class="app-page">
+            <main class="main-content" layout:fragment="content">Nội dung trang sẽ hiển thị ở đây.</main>
+            <footer class="app-footer">
+                <span>Human Resources System</span>
+                <span>Quản lý nhân sự nội bộ</span>
+            </footer>
         </div>
     </div>
-
-    <footer class="border-top bg-white">
-        <div class="container-fluid px-3 px-lg-4 py-3 d-flex flex-column flex-md-row
-                    align-items-center justify-content-between gap-2">
-            <span class="small text-secondary">Human Resources System</span>
-            <span class="small text-secondary">Quản lý nhân sự nội bộ</span>
-        </div>
-    </footer>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    (() => {
+        const toggle = document.getElementById('themeToggle');
+        const icon = document.getElementById('themeToggleIcon');
+
+        if (!toggle || !icon) return;
+
+        const updateToggle = (theme) => {
+            const isDark = theme === 'dark';
+            icon.textContent = isDark ? '☀' : '☾';
+            const nextAction = isDark ? 'Chuyển sang chế độ sáng' : 'Chuyển sang chế độ tối';
+            toggle.title = nextAction;
+            toggle.setAttribute('aria-label', nextAction);
+            toggle.setAttribute('aria-pressed', String(isDark));
+        };
+
+        updateToggle(document.documentElement.getAttribute('data-bs-theme') || 'light');
+
+        toggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-bs-theme') || 'light';
+            const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-bs-theme', nextTheme);
+            window.localStorage.setItem('hr-theme', nextTheme);
+            updateToggle(nextTheme);
+        });
+    })();
+</script>
 </body>
 </html>

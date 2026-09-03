@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout/base}">
+<head><title>Nhân viên</title></head>
+<body>
+<section layout:fragment="content" class="page-section">
+    <div class="page-header page-header--compact">
+        <div>
+            <div class="eyebrow">Quản trị nhân sự</div>
+            <h1 class="page-title">Nhân viên</h1>
+            <p class="page-lead">Quản lý hồ sơ nhân sự và thông tin tổ chức.</p>
+        </div>
+        <a class="btn btn-primary" sec:authorize="hasRole('ADMIN')" th:href="@{/employees/new}"><span class="btn-plus" aria-hidden="true">+</span> Thêm nhân viên</a>
+    </div>
+
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+        <span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
+    </div>
+
+    <div class="surface-card table-card">
+        <div class="table-toolbar employee-toolbar">
+            <div>
+                <div class="toolbar-kicker">Employee directory</div>
+                <h2 class="toolbar-title">Tất cả nhân viên</h2>
+                <p class="toolbar-note">Tìm theo mã, họ tên, email, phòng ban hoặc vị trí.</p>
+            </div>
+            <form class="search-form search-form--wide" method="get" th:action="@{/employees}">
+                <label class="visually-hidden" for="keyword">Tìm nhân viên</label>
+                <input id="keyword" name="keyword" class="form-control" placeholder="Tìm nhân viên..." th:value="${keyword}">
+                <label class="visually-hidden" for="status">Trạng thái</label>
+                <select id="status" name="status" class="form-select">
+                    <option value="">Tất cả trạng thái</option>
+                    <option th:each="item : ${employeeStatuses}" th:value="${item.name()}"
+                            th:text="${item.name() == 'ACTIVE' ? 'Đang làm việc' : item.name() == 'ON_LEAVE' ? 'Đang nghỉ' : item.name() == 'TERMINATED' ? 'Đã nghỉ việc' : 'Không hoạt động'}"
+                            th:selected="${statusFilter == item.name()}">Đang làm việc</option>
+                </select>
+                <button class="btn btn-outline-primary" type="submit">Lọc</button>
+                <a class="clear-filter" th:if="${(keyword != null and !keyword.isBlank()) or (statusFilter != null and !statusFilter.isBlank())}" th:href="@{/employees}">Xóa</a>
+            </form>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                <tr><th class="ps-4">Mã</th><th>Nhân viên</th><th>Phòng ban</th><th>Vị trí</th><th>Trạng thái</th><th class="text-end pe-4">Thao tác</th></tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(employees)}">
+                    <td colspan="6" class="text-center text-secondary py-5"><div class="empty-state-mark">—</div>Chưa có nhân viên phù hợp.</td>
+                </tr>
+                <tr th:each="employee : ${employees}">
+                    <td class="ps-4"><span class="code-chip" th:text="${employee.employeeCode}">EMP001</span></td>
+                    <td>
+                        <a class="person-cell text-decoration-none" th:href="@{/employees/{id}(id=${employee.id})}">
+                            <span class="avatar avatar--table" th:text="${#strings.substring(employee.fullName, 0, 1)}">N</span>
+                            <span>
+                                <span class="person-name d-block" th:text="${employee.fullName}">Nguyễn Văn A</span>
+                                <span class="table-subtext" th:text="${employee.email}">a@company.com</span>
+                            </span>
+                        </a>
+                    </td>
+                    <td th:text="${employee.department != null ? employee.department.name : 'Chưa gán'}">Engineering</td>
+                    <td th:text="${employee.position != null ? employee.position.name : 'Chưa gán'}">Developer</td>
+                    <td>
+                        <span class="status-badge status-badge--success" th:if="${employee.status.name() == 'ACTIVE'}">Đang làm việc</span>
+                        <span class="status-badge status-badge--warning" th:if="${employee.status.name() == 'ON_LEAVE'}">Đang nghỉ</span>
+                        <span class="status-badge status-badge--muted" th:if="${employee.status.name() == 'INACTIVE'}">Không hoạt động</span>
+                        <span class="status-badge status-badge--danger" th:if="${employee.status.name() == 'TERMINATED'}">Đã nghỉ việc</span>
+                    </td>
+                    <td class="text-end pe-4">
+                        <div class="table-actions">
+                            <a class="btn btn-sm btn-outline-secondary" th:href="@{/employees/{id}(id=${employee.id})}">Xem</a>
+                            <a class="btn btn-sm btn-outline-secondary" sec:authorize="hasRole('ADMIN')" th:href="@{/employees/{id}/edit(id=${employee.id})}">Sửa</a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+</body>
+</html>

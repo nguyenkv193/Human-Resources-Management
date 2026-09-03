@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head><title th:text="${isEdit ? 'Chỉnh sửa phòng ban' : 'Tạo phòng ban'}">Phòng ban</title></head>
+<body>
+<section layout:fragment="content" class="page-section">
+    <div class="page-header page-header--compact">
+        <div>
+            <div class="eyebrow">Phòng ban</div>
+            <h1 class="page-title" th:text="${isEdit ? 'Chỉnh sửa phòng ban' : 'Tạo phòng ban'}">Tạo phòng ban</h1>
+            <p class="page-lead">Thông tin dùng cho hồ sơ nhân viên, báo cáo và phê duyệt.</p>
+        </div>
+        <a class="btn btn-outline-secondary" th:href="@{/departments}">Quay lại</a>
+    </div>
+
+    <div class="surface-card form-card">
+        <div class="form-card-intro">
+            <span class="form-card-number">01</span>
+            <div><h2>Thông tin tổ chức</h2><p>Mã phòng ban nên ổn định để dùng trong báo cáo và tích hợp.</p></div>
+        </div>
+        <div class="form-card-body">
+            <form th:object="${departmentForm}" th:action="${isEdit ? '/departments/' + departmentId : '/departments'}" method="post" novalidate>
+                <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger mb-4"><div th:each="error : ${#fields.globalErrors()}" th:text="${error.defaultMessage}"></div></div>
+                <div class="form-grid">
+                    <div>
+                        <label for="code" class="form-label">Mã phòng ban</label>
+                        <input id="code" type="text" class="form-control" th:field="*{code}" th:classappend="${#fields.hasErrors('code')} ? 'is-invalid'" placeholder="VD: ENG">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('code')}" th:errors="*{code}"></div>
+                    </div>
+                    <div>
+                        <label for="name" class="form-label">Tên phòng ban</label>
+                        <input id="name" type="text" class="form-control" th:field="*{name}" th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'" placeholder="VD: Engineering">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                    </div>
+                    <div>
+                        <label for="parentId" class="form-label">Phòng ban cha <span class="text-secondary">(tùy chọn)</span></label>
+                        <select id="parentId" class="form-select" th:field="*{parentId}">
+                            <option value="">Cấp công ty</option>
+                            <option th:each="parent : ${departments}" th:if="${!isEdit or parent.id != departmentId}" th:value="${parent.id}" th:text="${parent.code + ' · ' + parent.name}">ENG · Engineering</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="status" class="form-label">Trạng thái</label>
+                        <select id="status" class="form-select" th:field="*{status}"><option th:each="item : ${departmentStatuses}" th:value="${item}" th:text="${item.name() == 'ACTIVE' ? 'Đang hoạt động' : 'Ngừng sử dụng'}">Đang hoạt động</option></select>
+                    </div>
+                    <div class="form-field--full">
+                        <label for="description" class="form-label">Mô tả <span class="text-secondary">(tùy chọn)</span></label>
+                        <textarea id="description" class="form-control" rows="4" th:field="*{description}" placeholder="Mục tiêu hoặc phạm vi hoạt động..."></textarea>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+                    </div>
+                </div>
+                <div class="form-actions"><a class="btn btn-outline-secondary" th:href="@{/departments}">Hủy</a><button class="btn btn-primary" type="submit" th:text="${isEdit ? 'Lưu thay đổi' : 'Tạo phòng ban'}">Lưu</button></div>
+            </form>
+        </div>
+    </div>
+</section>
+</body>
+</html>

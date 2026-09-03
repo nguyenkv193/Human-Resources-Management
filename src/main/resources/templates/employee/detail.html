@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout/base}">
+<head><title th:text="${employee.fullName}">Hồ sơ nhân viên</title></head>
+<body>
+<section layout:fragment="content" class="page-section">
+    <div class="page-header page-header--compact">
+        <div>
+            <div class="eyebrow">Nhân viên</div>
+            <h1 class="page-title" th:text="${employee.fullName}">Nguyễn Văn A</h1>
+            <p class="page-lead"><span class="code-chip" th:text="${employee.employeeCode}">EMP001</span> · Hồ sơ nhân viên</p>
+        </div>
+        <div class="table-actions">
+            <a class="btn btn-outline-secondary" th:href="@{/employees}">Danh sách</a>
+            <a class="btn btn-primary" sec:authorize="hasRole('ADMIN')" th:href="@{/employees/{id}/edit(id=${employee.id})}">Chỉnh sửa</a>
+        </div>
+    </div>
+
+    <div class="profile-grid">
+        <div class="surface-card profile-hero">
+            <div class="avatar avatar--profile" th:text="${#strings.substring(employee.fullName, 0, 1)}">N</div>
+            <div>
+                <div class="profile-eyebrow">Employee record</div>
+                <h2 th:text="${employee.fullName}">Nguyễn Văn A</h2>
+                <p th:text="${employee.position != null ? employee.position.name : 'Chưa gán vị trí'}">Backend Developer</p>
+                <span class="status-badge status-badge--success" th:if="${employee.status.name() == 'ACTIVE'}">Đang làm việc</span>
+                <span class="status-badge status-badge--warning" th:if="${employee.status.name() == 'ON_LEAVE'}">Đang nghỉ</span>
+                <span class="status-badge status-badge--muted" th:if="${employee.status.name() == 'INACTIVE'}">Không hoạt động</span>
+                <span class="status-badge status-badge--danger" th:if="${employee.status.name() == 'TERMINATED'}">Đã nghỉ việc</span>
+            </div>
+        </div>
+
+        <div class="surface-card detail-card">
+            <div class="section-kicker">Employment</div>
+            <h2 class="section-title">Thông tin công việc</h2>
+            <dl class="detail-list">
+                <div><dt>Phòng ban</dt><dd th:text="${employee.department != null ? employee.department.name : 'Chưa gán'}">Engineering</dd></div>
+                <div><dt>Vị trí</dt><dd th:text="${employee.position != null ? employee.position.name : 'Chưa gán'}">Backend Developer</dd></div>
+                <div><dt>Quản lý</dt><dd th:text="${employee.manager != null ? employee.manager.fullName : 'Chưa gán'}">Chưa gán</dd></div>
+                <div><dt>Ngày vào làm</dt><dd th:text="${employee.hireDate}">2026-01-01</dd></div>
+                <div><dt>Ngày nghỉ việc</dt><dd th:text="${employee.terminationDate != null ? employee.terminationDate : '—'}">—</dd></div>
+            </dl>
+        </div>
+
+        <div class="surface-card detail-card">
+            <div class="section-kicker">Personal</div>
+            <h2 class="section-title">Thông tin liên hệ</h2>
+            <dl class="detail-list">
+                <div><dt>Email</dt><dd th:text="${employee.email}">a@company.com</dd></div>
+                <div><dt>Điện thoại</dt><dd th:text="${employee.phone != null ? employee.phone : '—'}">—</dd></div>
+                <div><dt>Ngày sinh</dt><dd th:text="${employee.dateOfBirth != null ? employee.dateOfBirth : '—'}">—</dd></div>
+                <div><dt>Giới tính</dt><dd th:text="${employee.gender != null ? employee.gender : '—'}">—</dd></div>
+                <div><dt>Địa chỉ</dt><dd th:text="${employee.address != null ? employee.address : '—'}">—</dd></div>
+            </dl>
+        </div>
+    </div>
+</section>
+</body>
+</html>

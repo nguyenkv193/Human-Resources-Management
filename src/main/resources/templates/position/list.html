@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head><title>Vị trí công việc</title></head>
+<body>
+<section layout:fragment="content" class="page-section">
+    <div class="page-header page-header--compact">
+        <div>
+            <div class="eyebrow">Tổ chức</div>
+            <h1 class="page-title">Vị trí công việc</h1>
+            <p class="page-lead">Chuẩn hóa job title cho cơ cấu và lộ trình nhân sự.</p>
+        </div>
+        <a class="btn btn-primary" th:href="@{/positions/new}"><span class="btn-plus" aria-hidden="true">+</span> Thêm vị trí</a>
+    </div>
+
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+        <span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
+    </div>
+
+    <div class="surface-card table-card">
+        <div class="table-toolbar">
+            <div>
+                <div class="toolbar-kicker">Organization</div>
+                <h2 class="toolbar-title">Danh mục vị trí</h2>
+                <p class="toolbar-note">Một vị trí có thể được gán cho nhiều nhân viên.</p>
+            </div>
+            <span class="record-count" th:text="${#lists.size(positions) + ' vị trí'}">0 vị trí</span>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead><tr><th class="ps-4">Mã</th><th>Vị trí</th><th>Mô tả</th><th>Trạng thái</th><th class="text-end pe-4">Thao tác</th></tr></thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(positions)}"><td colspan="5" class="text-center text-secondary py-5">Chưa có vị trí nào.</td></tr>
+                <tr th:each="position : ${positions}">
+                    <td class="ps-4"><span class="code-chip" th:text="${position.code}">BE</span></td>
+                    <td class="fw-semibold" th:text="${position.name}">Backend Developer</td>
+                    <td class="table-subtext" th:text="${position.description ?: 'Chưa có mô tả'}">Mô tả</td>
+                    <td>
+                        <span class="status-badge status-badge--success" th:if="${position.status.name() == 'ACTIVE'}">Đang hoạt động</span>
+                        <span class="status-badge status-badge--muted" th:unless="${position.status.name() == 'ACTIVE'}">Ngừng sử dụng</span>
+                    </td>
+                    <td class="text-end pe-4"><a class="btn btn-sm btn-outline-secondary" th:href="@{/positions/{id}/edit(id=${position.id})}">Chỉnh sửa</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+</body>
+</html>
