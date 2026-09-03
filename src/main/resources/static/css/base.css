@@ -701,3 +701,58 @@ body { background: var(--app-bg); color: var(--app-ink); }
     .password-toggle { right: 15px; }
     .login-submit { min-height: 62px; margin-top: 28px; border-radius: 12px; font-size: .98rem; }
 }
+
+/* Compact login pass: keep the reference composition without oversized controls. */
+.login-visual { padding: clamp(30px, 4.4vw, 66px) clamp(24px, 5.4vw, 78px); }
+.login-logo-block { display: block; width: 146px; height: 80px; border-radius: 4px; object-fit: contain; }
+.login-visual-copy { margin-top: clamp(54px, 8vh, 100px); }
+.login-visual-copy .login-kicker { margin-bottom: 11px; font-size: .68rem; }
+.login-visual-copy h1 { font-size: clamp(2.25rem, 4.2vw, 3.15rem); }
+.login-visual-copy p { max-width: 540px; margin-top: 21px; font-size: clamp(.86rem, 1.1vw, 1rem); line-height: 1.55; }
+.login-feature-list { gap: 15px; margin-top: clamp(34px, 4.8vh, 58px); }
+.login-feature-list li { gap: 14px; font-size: clamp(.82rem, 1.05vw, .98rem); }
+.login-feature-check { width: 38px; height: 38px; font-size: 1rem; }
+.login-form-panel { padding: clamp(28px, 4.4vw, 68px); }
+.login-form-wrap { width: min(100%, 540px); }
+.login-form-heading { margin-bottom: 32px; }
+.login-form-heading .login-kicker { margin-bottom: 11px; font-size: .7rem; }
+.login-form-heading h1 { font-size: clamp(2rem, 3.3vw, 2.75rem); }
+.login-form-heading p { margin-top: 13px; font-size: clamp(.82rem, 1.1vw, .98rem); }
+.login-field { margin-bottom: 20px; }
+.login-field .form-label { margin-bottom: 8px; font-size: .88rem; }
+.login-input-icon { left: 20px; width: 23px; height: 23px; }
+.login-input-wrap .form-control { min-height: 62px; padding: 0 56px; border-radius: 12px; font-size: .92rem; }
+.password-toggle { right: 15px; }
+.password-toggle svg { width: 22px; height: 22px; }
+.login-submit { min-height: 62px; margin-top: 26px; border-radius: 12px; font-size: .98rem; }
+.login-submit span:last-child { font-size: 1.35rem; }
+.login-secure-note { margin-top: 20px; padding-top: 14px; font-size: .66rem; }
+
+@media (max-width: 980px) {
+    .login-visual { padding: 30px 26px 36px; }
+    .login-logo-block { width: 124px; height: 68px; }
+    .login-visual-copy { margin-top: 48px; }
+    .login-feature-list { gap: 12px; margin-top: 30px; }
+    .login-feature-list li { gap: 8px; font-size: .74rem; }
+    .login-feature-check { width: 32px; height: 32px; font-size: .86rem; }
+    .login-form-panel { padding: 48px 26px 62px; }
+}
+
+@media (max-width: 560px) {
+    .login-visual { padding: 24px 18px 30px; }
+    .login-logo-block { width: 104px; height: 57px; }
+    .login-visual-copy { margin-top: 34px; }
+    .login-visual-copy h1 { font-size: 2.3rem; }
+    .login-visual-copy p { margin-top: 14px; font-size: .8rem; }
+    .login-feature-list { gap: 10px; margin-top: 24px; }
+    .login-feature-list li { gap: 10px; font-size: .74rem; }
+    .login-feature-check { width: 27px; height: 27px; font-size: .75rem; }
+    .login-visual-footer { margin-top: 24px; }
+    .login-form-panel { padding: 36px 18px 44px; }
+    .login-form-heading { margin-bottom: 26px; }
+    .login-form-heading h1 { font-size: 2.15rem; }
+    .login-input-wrap .form-control { min-height: 56px; padding-right: 52px; padding-left: 54px; border-radius: 10px; font-size: .84rem; }
+    .login-input-icon { left: 17px; width: 21px; height: 21px; }
+    .password-toggle { right: 12px; }
+    .login-submit { min-height: 56px; margin-top: 22px; border-radius: 10px; font-size: .9rem; }
+}
