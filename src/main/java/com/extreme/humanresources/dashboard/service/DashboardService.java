@@ -1,6 +1,11 @@
 package com.extreme.humanresources.dashboard.service;
 
 import com.extreme.humanresources.dashboard.dto.response.DashboardSummary;
+import com.extreme.humanresources.attendance.repository.AttendanceRepository;
+import com.extreme.humanresources.employee.entity.EmployeeStatus;
+import com.extreme.humanresources.employee.repository.EmployeeRepository;
+import com.extreme.humanresources.leave.entity.LeaveRequestStatus;
+import com.extreme.humanresources.leave.repository.LeaveRequestRepository;
 import com.extreme.humanresources.user.entity.Role;
 import com.extreme.humanresources.user.entity.User;
 import com.extreme.humanresources.user.repository.UserRepository;
@@ -9,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZoneId;
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
@@ -26,6 +32,9 @@ public class DashboardService {
             DateTimeFormatter.ofPattern("EEEE, dd/MM/yyyy", Locale.forLanguageTag("vi-VN"));
 
     private final UserRepository userRepository;
+    private final EmployeeRepository employeeRepository;
+    private final LeaveRequestRepository leaveRequestRepository;
+    private final AttendanceRepository attendanceRepository;
 
     public DashboardSummary getSummary() {
         List<DashboardSummary.RecentUser> recentUsers = userRepository.findTop5ByOrderByCreatedAtDesc()
@@ -39,6 +48,10 @@ public class DashboardService {
                 .disabledUsers(userRepository.countByEnabledFalse())
                 .adminUsers(userRepository.countByRoleNameIgnoreCase("ADMIN"))
                 .standardUsers(userRepository.countByRoleNameIgnoreCase("USER"))
+                .totalEmployees(employeeRepository.count())
+                .activeEmployees(employeeRepository.countByStatus(EmployeeStatus.ACTIVE))
+                .pendingLeaveRequests(leaveRequestRepository.countByStatus(LeaveRequestStatus.PENDING))
+                .attendanceToday(attendanceRepository.countByWorkDate(LocalDate.now()))
                 .today(ZonedDateTime.now().format(TODAY_FORMATTER))
                 .recentUsers(recentUsers)
                 .build();

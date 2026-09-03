@@ -14,6 +14,10 @@ public class DashboardSummary {
     private final long disabledUsers;
     private final long adminUsers;
     private final long standardUsers;
+    private final long totalEmployees;
+    private final long activeEmployees;
+    private final long pendingLeaveRequests;
+    private final long attendanceToday;
     private final String today;
     private final List<RecentUser> recentUsers;
 

@@ -7,29 +7,37 @@
     <title th:text="${isEdit ? 'Chỉnh sửa User' : 'Tạo User'}">User</title>
 </head>
 <body>
-<section layout:fragment="content">
-    <div class="d-flex align-items-center justify-content-between mb-4">
+<section layout:fragment="content" class="page-section">
+    <div class="page-header page-header--compact">
         <div>
-            <h1 class="h3 mb-1" th:text="${isEdit ? 'Chỉnh sửa User' : 'Tạo User'}">Tạo User</h1>
-            <p class="text-secondary mb-0">Nhập thông tin tài khoản và phân quyền.</p>
+            <div class="eyebrow"><span class="eyebrow-mark" aria-hidden="true"></span> Directory / 02</div>
+            <h1 class="page-title" th:text="${isEdit ? 'Chỉnh sửa User' : 'Tạo User'}">Tạo User</h1>
+            <p class="page-lead">Nhập thông tin tài khoản và phân quyền.</p>
         </div>
         <a class="btn btn-outline-secondary" th:href="@{/users}">Quay lại</a>
     </div>
 
-    <div class="card border-0 shadow-sm">
-        <div class="card-body">
+    <div class="surface-card form-card">
+        <div class="form-card-intro">
+            <span class="form-card-number">01</span>
+            <div>
+                <h2>Thông tin tài khoản</h2>
+                <p>Thiết lập danh tính đăng nhập và quyền truy cập cho User.</p>
+            </div>
+        </div>
+        <div class="form-card-body">
             <form th:object="${userForm}"
                   th:action="${isEdit ? '/users/' + userId : '/users'}"
                   method="post" novalidate>
                 <input type="hidden" th:if="${_csrf != null}"
                        th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 
-                <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger">
+                <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger mb-4">
                     <div th:each="error : ${#fields.globalErrors()}" th:text="${error.defaultMessage}"></div>
                 </div>
 
-                <div class="row g-3">
-                    <div class="col-md-6">
+                <div class="form-grid">
+                    <div>
                         <label for="username" class="form-label">Username</label>
                         <input id="username" type="text" class="form-control"
                                th:field="*{username}"
@@ -39,7 +47,7 @@
                              th:errors="*{username}"></div>
                     </div>
 
-                    <div class="col-md-6" th:if="${!isEdit}">
+                    <div th:if="${!isEdit}">
                         <label for="password" class="form-label">Mật khẩu</label>
                         <input id="password" type="password" class="form-control"
                                th:field="*{password}"
@@ -50,40 +58,31 @@
                              th:errors="*{password}"></div>
                     </div>
 
-                    <div class="col-md-6">
+                    <div>
                         <label for="employeeId" class="form-label">Employee ID <span class="text-secondary">(tùy chọn)</span></label>
-                        <input id="employeeId" type="number" min="1" class="form-control"
-                               th:field="*{employeeId}">
+                        <input id="employeeId" type="number" min="1" class="form-control" th:field="*{employeeId}">
                     </div>
 
-                    <div class="col-md-6 d-flex align-items-end" th:if="${isEdit}">
+                    <div class="d-flex align-items-end" th:if="${isEdit}">
                         <div class="form-check form-switch mb-2">
                             <input id="enabled" type="checkbox" class="form-check-input" th:field="*{enabled}">
                             <label for="enabled" class="form-check-label">Tài khoản đang hoạt động</label>
                         </div>
                     </div>
 
-                    <div class="col-12">
+                    <div class="form-field--full">
                         <label class="form-label">Roles</label>
-                        <div class="border rounded p-3">
+                        <div class="role-picker">
                             <div th:if="${#lists.isEmpty(roles)}" class="text-secondary">Chưa có role trong hệ thống.</div>
-                            <div class="form-check form-check-inline" th:each="role : ${roles}">
-                                <input class="form-check-input" type="checkbox" name="roleIds"
-                                       th:id="|role-${role.id}|" th:value="${role.id}"
-                                       th:checked="${userForm.roleIds != null and userForm.roleIds.contains(role.id)}">
-                                <label class="form-check-label" th:for="|role-${role.id}|"
-                                       th:text="${role.name}">ADMIN</label>
-                            </div>
+                            <label class="role-choice" th:each="role : ${roles}" th:for="|role-${role.id}|"><input class="form-check-input mt-0" type="checkbox" name="roleIds" th:id="|role-${role.id}|" th:value="${role.id}" th:checked="${userForm.roleIds != null and userForm.roleIds.contains(role.id)}"><span th:text="${role.name}">ADMIN</span></label>
                         </div>
-                        <div class="text-danger small mt-1" th:if="${#fields.hasErrors('roleIds')}"
-                             th:errors="*{roleIds}"></div>
+                        <div class="text-danger small mt-1" th:if="${#fields.hasErrors('roleIds')}" th:errors="*{roleIds}"></div>
                     </div>
                 </div>
 
-                <div class="d-flex justify-content-end gap-2 mt-4">
+                <div class="form-actions">
                     <a class="btn btn-outline-secondary" th:href="@{/users}">Hủy</a>
-                    <button class="btn btn-primary" type="submit"
-                            th:text="${isEdit ? 'Lưu thay đổi' : 'Tạo User'}">Lưu</button>
+                    <button class="btn btn-primary" type="submit" th:text="${isEdit ? 'Lưu thay đổi' : 'Tạo User'}">Lưu</button>
                 </div>
             </form>
         </div>
